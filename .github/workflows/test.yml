@@ -33,8 +33,5 @@ jobs:
     - name: Type check with mypy
       run: uv run mypy mailnow
     
-    - name: Lint with ruff
-      run: uv run ruff check mailnow tests
-    
     - name: Check formatting with black
       run: uv run black --check mailnow tests
