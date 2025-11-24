@@ -1,6 +1,6 @@
 """Main client class for the Mailnow SDK."""
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from mailnow.http_client import HTTPClient
 from mailnow.validation import validate_api_key
@@ -65,6 +65,7 @@ class MailnowClient:
         to_email: str,
         subject: str,
         html: str,
+        attachments: List[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Send an email via the Mailnow API.
@@ -135,6 +136,7 @@ class MailnowClient:
             "to": to_email,
             "subject": subject,
             "html": html,
+            "attachments": attachments or [],
         }
 
         # Call HTTPClient to send the request
