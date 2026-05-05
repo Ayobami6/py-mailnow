@@ -11,6 +11,9 @@ The Mailnow Python SDK is a client library that enables customers of the Mailnow
 - **API Key**: A customer-specific authentication token (format: mn_live_*) used to authenticate requests to the Mailnow API
 - **Email Client**: The main SDK class that customers instantiate to send emails
 - **Customer**: A user of the Mailnow SaaS service who uses the Python SDK in their application
+- **Attachment**: A file included with an email, represented by a filename, base64-encoded content string, and a MIME content type
+- **Content Type**: A MIME type string (e.g., "application/pdf", "image/png") that identifies the format of an attachment's content
+- **Base64 Content**: The attachment file data encoded as a base64 string for safe JSON transport
 
 ## Requirements
 
@@ -103,3 +106,18 @@ The Mailnow Python SDK is a client library that enables customers of the Mailnow
 2. THE Mailnow SDK SHALL set appropriate timeout values for API requests
 3. THE Mailnow SDK SHALL properly close HTTP connections after requests complete
 4. WHERE multiple emails are sent, THE Mailnow SDK SHALL reuse HTTP connections when possible
+
+### Requirement 9
+
+**User Story:** As a customer, I want to attach files to emails I send, so that I can deliver documents and media alongside my message content.
+
+#### Acceptance Criteria
+
+1. THE Mailnow SDK SHALL provide a send_email method that accepts an optional attachments parameter containing a list of attachment dictionaries
+2. WHEN the attachments parameter is omitted or is an empty list, THE Mailnow SDK SHALL send the email without an attachments field in the request payload
+3. WHEN attachments are provided, THE Mailnow SDK SHALL include each attachment in the request payload with filename, content, and content_type fields
+4. WHEN an attachment is missing a required field (filename, content, or content_type), THE Mailnow SDK SHALL raise a validation error before making the API request
+5. WHEN an attachment filename is empty or whitespace-only, THE Mailnow SDK SHALL raise a validation error before making the API request
+6. WHEN an attachment content is empty or whitespace-only, THE Mailnow SDK SHALL raise a validation error before making the API request
+7. WHEN an attachment content_type is empty or whitespace-only, THE Mailnow SDK SHALL raise a validation error before making the API request
+8. THE Mailnow SDK SHALL serialize attachments as a JSON array in the request body under the key "attachments"

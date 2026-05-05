@@ -27,9 +27,11 @@ from mailnow.exceptions import (
     MailnowServerError,
     MailnowConnectionError,
 )
+from mailnow.types import Attachment
 
 __all__ = [
     "MailnowClient",
+    "Attachment",
     "MailnowError",
     "MailnowValidationError",
     "MailnowAuthError",

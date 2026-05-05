@@ -5,6 +5,7 @@ from typing import Dict, Any
 from mailnow.http_client import HTTPClient
 from mailnow.validation import validate_api_key
 from mailnow.exceptions import MailnowAuthError
+from mailnow.types import Attachment
 
 
 class MailnowClient:
@@ -65,6 +66,7 @@ class MailnowClient:
         to_email: str,
         subject: str,
         html: str,
+        attachments: list[Attachment] | None = None,
     ) -> Dict[str, Any]:
         """
         Send an email via the Mailnow API.
@@ -126,16 +128,17 @@ class MailnowClient:
         """
         from mailnow.validation import validate_email_params
 
-        # Validate all email parameters
-        validate_email_params(from_email, to_email, subject, html)
+        validate_email_params(from_email, to_email, subject, html, attachments)
 
-        # Build payload dictionary mapping parameters to API format
-        payload = {
+        payload: Dict[str, Any] = {
             "from": from_email,
             "to": to_email,
             "subject": subject,
             "html": html,
         }
+
+        if attachments:
+            payload["attachments"] = attachments
 
         # Call HTTPClient to send the request
         response = self._http_client.send_email_request(payload)

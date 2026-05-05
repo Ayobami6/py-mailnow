@@ -2,7 +2,7 @@
 
 import re
 from typing import Optional
-
+from mailnow.types import Attachment
 from mailnow.exceptions import MailnowValidationError
 
 
@@ -41,22 +41,23 @@ def validate_email_address(email: str) -> None:
         raise MailnowValidationError(f"Invalid email address format: {email}")
 
 
+def validate_attachments(attachments: list[Attachment]) -> None:
+    for i, att in enumerate(attachments):
+        if not att.get("filename", "").strip():
+            raise MailnowValidationError(f"Attachment {i}: filename is required")
+        if not att.get("content", "").strip():
+            raise MailnowValidationError(f"Attachment {i}: content is required")
+        if not att.get("content_type", "").strip():
+            raise MailnowValidationError(f"Attachment {i}: content_type is required")
+
+
 def validate_email_params(
-    from_email: str, to_email: str, subject: str, html: str
+    from_email: str,
+    to_email: str,
+    subject: str,
+    html: str,
+    attachments: list[Attachment] | None = None,
 ) -> None:
-    """
-    Validate all email parameters.
-
-    Args:
-        from_email: Sender email address
-        to_email: Recipient email address
-        subject: Email subject line
-        html: HTML content
-
-    Raises:
-        MailnowValidationError: If any parameter is missing, empty, or invalid
-    """
-    # Check for missing or empty parameters
     if not from_email or not from_email.strip():
         raise MailnowValidationError("from_email is required and cannot be empty")
 
@@ -69,6 +70,8 @@ def validate_email_params(
     if not html or not html.strip():
         raise MailnowValidationError("html is required and cannot be empty")
 
-    # Validate email address formats
     validate_email_address(from_email)
     validate_email_address(to_email)
+
+    if attachments:
+        validate_attachments(attachments)
