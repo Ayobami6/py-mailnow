@@ -16,7 +16,7 @@ Example:
     ... )
 """
 
-__version__: str = "0.1.0"
+__version__: str = "0.1.1"
 
 from mailnow.client import MailnowClient
 from mailnow.exceptions import (
